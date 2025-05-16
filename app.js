@@ -233,11 +233,15 @@ const DesignerGallery = () => {
               className="w-full h-auto bg-gray-200"
             />
             <div className="mt-1 text-sm">
-              <p className="font-semibold truncate">{designer.name}</p>
-              <p className="text-xs text-gray-600">{designer.country}</p>
-              <p className="text-xs text-gray-500">{designer.region}</p>
-            </div>
-          </div>
+  <p className="font-semibold truncate">{designer.name}</p>
+  <p className="text-xs text-gray-600">{designer.country}</p>
+  <p className="text-xs flex items-center">
+    <span 
+      className={`inline-block w-2 h-2 rounded-full mr-1 ${regionColors[designer.region] || 'bg-gray-500'}`}
+    ></span>
+    <span>{designer.region}</span>
+  </p>
+</div>
         ))}
       </div>
       
