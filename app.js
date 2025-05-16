@@ -12,6 +12,7 @@ const DesignerGallery = () => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [stats, setStats] = React.useState({});
+  const [occurrenceFilter, setOccurrenceFilter] = React.useState('All');
 
   // Region color mapping
   const regionColors = {
