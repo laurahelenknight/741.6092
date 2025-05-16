@@ -151,55 +151,80 @@ const DesignerGallery = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">741.6092: Graphic Designers</h1>
       
-      <div className="mb-6 flex flex-wrap gap-4">
-        <div className="filter-group">
-          <label className="block mb-2 font-semibold">Region:</label>
-          <select 
-            className="border rounded px-3 py-2 min-w-40"
-            value={filters.region}
-            onChange={(e) => handleFilterChange('region', e.target.value)}
+      <div className="mb-8">
+  {/* Filter Groups */}
+  <div className="filter-sections space-y-6">
+    {/* Region Filters */}
+    <div className="filter-group">
+      <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Region</h3>
+      <div className="flex flex-wrap gap-2">
+        {regions.map(region => (
+          <button
+            key={region}
+            className={`text-sm py-1 px-2 rounded-full transition-colors ${
+              filters.region === region 
+                ? `bg-gray-800 text-white` 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            onClick={() => handleFilterChange('region', region)}
           >
-            {regions.map(region => (
-              <option key={region} value={region}>{region}</option>
-            ))}
-          </select>
-        </div>
-        
-        <div className="filter-group">
-          <label className="block mb-2 font-semibold">Country:</label>
-          <select 
-            className="border rounded px-3 py-2 min-w-40"
-            value={filters.country}
-            onChange={(e) => handleFilterChange('country', e.target.value)}
-          >
-            {countries.map(country => (
-              <option key={country} value={country}>{country}</option>
-            ))}
-          </select>
-        </div>
-        
-        <div className="filter-group">
-          <label className="block mb-2 font-semibold">Gender:</label>
-          <select 
-            className="border rounded px-3 py-2 min-w-32"
-            value={filters.gender}
-            onChange={(e) => handleFilterChange('gender', e.target.value)}
-          >
-            {genders.map(gender => (
-              <option key={gender} value={gender}>{gender}</option>
-            ))}
-          </select>
-        </div>
-        
-        <div className="filter-group mt-auto">
-          <button 
-            onClick={resetFilters}
-            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-          >
-            Reset Filters
+            {region}
           </button>
-        </div>
+        ))}
       </div>
+    </div>
+    
+    {/* Country Filters */}
+    <div className="filter-group">
+      <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Country</h3>
+      <div className="flex flex-wrap gap-2">
+        {countries.map(country => (
+          <button
+            key={country}
+            className={`text-sm py-1 px-2 rounded-full transition-colors ${
+              filters.country === country 
+                ? `bg-gray-800 text-white` 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            onClick={() => handleFilterChange('country', country)}
+          >
+            {country}
+          </button>
+        ))}
+      </div>
+    </div>
+    
+    {/* Gender Filters */}
+    <div className="filter-group">
+      <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Gender</h3>
+      <div className="flex flex-wrap gap-2">
+        {genders.map(gender => (
+          <button
+            key={gender}
+            className={`text-sm py-1 px-2 rounded-full transition-colors ${
+              filters.gender === gender 
+                ? `bg-gray-800 text-white` 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            onClick={() => handleFilterChange('gender', gender)}
+          >
+            {gender}
+          </button>
+        ))}
+      </div>
+    </div>
+    
+    {/* Reset Button */}
+    {(filters.region !== 'All' || filters.country !== 'All' || filters.gender !== 'All') && (
+      <button 
+        onClick={resetFilters}
+        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+      >
+        Clear all filters
+      </button>
+    )}
+  </div>
+</div>
       
       <div className="stats mb-6">
         <p className="text-gray-700 mb-2">
