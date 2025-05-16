@@ -259,7 +259,7 @@ const DesignerGallery = () => {
 {/* Stats section without region legend */}
 <div className="stats mb-6">
   <p className="text-gray-700 mb-2">
-    Showing {filteredDesigners.length} of {designers.length} designers
+    Highlighting {filteredDesigners.length} of {designers.length} designers
   </p>
 </div>
       
