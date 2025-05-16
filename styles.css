@@ -1,4 +1,24 @@
-/* styles.css with region enhancements */
+/* Override Tailwind's default font family with Inclusive Sans */
+:root {
+  --font-sans: 'Inclusive Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Apply the font to everything */
+* {
+  font-family: var(--font-sans);
+}
+
+/* Typography refinements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.text-2xl {
+  letter-spacing: -0.02em;
+}
+
+/* Designer card styles */
 .designer-card {
   transition: transform 0.2s;
   position: relative;
@@ -7,6 +27,17 @@
 .designer-card:hover {
   transform: scale(1.03);
   z-index: 10;
+}
+
+/* Black and white filter for all designer images */
+.designer-card img {
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+/* Optional: Return to color on hover */
+.designer-card:hover img {
+  filter: grayscale(0%);
 }
 
 /* Region indicator dot animation */
@@ -20,18 +51,24 @@
   transform: scale(1.2);
 }
 
-/* Filter styles */
+/* Filter styles with font adjustments */
 .filter-group select {
   transition: border-color 0.2s;
+  font-size: 0.95rem;
 }
 
 .filter-group select:focus {
   border-color: #4299e1;
   outline: none;
 }
-.designer-card img {
-  filter: grayscale(100%);
-  transition: filter 0.3s ease;
+
+.filter-group label {
+  font-weight: 500;
+}
+
+/* Button styling with Inclusive Sans */
+button {
+  font-weight: 500;
 }
 
 /* Region legend */
@@ -56,7 +93,12 @@
   margin-right: 4px;
 }
 
-.designer-card img {
-  filter: grayscale(100%);
-  transition: filter 0.3s ease;
+/* Designer name and details */
+.designer-card .font-semibold {
+  font-weight: 600;
+}
+
+.designer-card .text-xs {
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
