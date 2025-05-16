@@ -333,11 +333,14 @@ const resetFilters = () => {
     
 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
   {designers.map(designer => {
-    // Check if this designer matches all the current filters
-    const matchesFilters = 
-      (filters.country === 'All' || designer.country === filters.country) &&
-      (filters.region === 'All' || designer.region === filters.region) &&
-      (filters.gender === 'All' || designer.gender === filters.gender);
+  // Check if this designer matches all the current filters
+  const matchesFilters = 
+    (filters.country === 'All' || designer.country === filters.country) &&
+    (filters.region === 'All' || designer.region === filters.region) &&
+    (filters.gender === 'All' || designer.gender === filters.gender) &&
+    (occurrenceFilter === 'All' || 
+     (occurrenceFilter === '5+' ? designer.occurrences >= 5 : 
+      designer.occurrences >= parseInt(occurrenceFilter)))
     
     return (
       <div 
