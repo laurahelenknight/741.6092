@@ -126,13 +126,14 @@ React.useEffect(() => {
   
   // Add occurrence filtering
   if (occurrenceFilter !== 'All') {
+    // Handle "5+" special case
     const minOccurrences = occurrenceFilter === '5+' ? 5 : parseInt(occurrenceFilter);
     results = results.filter(designer => designer.occurrences >= minOccurrences);
   }
   
   setFilteredDesigners(results);
   calculateStats(results); // Update stats based on filtered data
-}, [filters, designers, occurrenceFilter]); // Add occurrenceFilter to dependency array
+}, [filters, designers, occurrenceFilter]);
 
   // Handle filter changes
   const handleFilterChange = (filterType, value) => {
