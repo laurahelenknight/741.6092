@@ -29,6 +29,10 @@
   border-color: #4299e1;
   outline: none;
 }
+.designer-card img {
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
 
 /* Region legend */
 .region-legend {
