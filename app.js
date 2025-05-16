@@ -151,74 +151,76 @@ const DesignerGallery = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold mb-6">741.6092: Graphic Designers</h1>
       
-      <div className="mb-8">
+     <div className="mb-8">
   {/* Filter Groups */}
   <div className="filter-sections space-y-6">
     {/* Region Filters */}
-    {/* Country Filters - Now filtered by selected region */}
-<div className="filter-group">
-  <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Country</h3>
-  <div className="flex flex-wrap gap-2">
-    {/* Always show "All" option */}
-    <button
-      key="All"
-      className={`text-sm py-1 px-2 rounded-full transition-colors ${
-        filters.country === 'All' 
-          ? `bg-gray-800 text-white` 
-          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-      }`}
-      onClick={() => handleFilterChange('country', 'All')}
-    >
-      All
-    </button>
-    
-    {/* Only show countries that match the selected region */}
-    {countries
-      .filter(country => country !== 'All') // Exclude "All" option since we already added it
-      .filter(country => {
-        // If no region is selected (All), show all countries
-        if (filters.region === 'All') return true;
-        
-        // Otherwise, only show countries that match the selected region
-        const matchingDesigners = designers.filter(d => 
-          d.country === country && d.region === filters.region
-        );
-        return matchingDesigners.length > 0;
-      })
-      .map(country => (
-        <button
-          key={country}
-          className={`text-sm py-1 px-2 rounded-full transition-colors ${
-            filters.country === country 
-              ? `bg-gray-800 text-white` 
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-          onClick={() => handleFilterChange('country', country)}
-        >
-          {country}
-        </button>
-      ))
-    }
-  </div>
-</div>
+    <div className="filter-group">
+      <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Region</h3>
+      <div className="flex flex-wrap gap-2">
+        {regions.map(region => (
+          <button
+            key={region}
+            className={`text-sm py-1 px-2 rounded-full transition-colors ${
+              filters.region === region 
+                ? `bg-gray-800 text-white` 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            onClick={() => {
+              // Reset country filter when region changes
+              if (region !== filters.region) {
+                setFilters(prevFilters => ({
+                  ...prevFilters,
+                  region: region,
+                  country: 'All'
+                }));
+              } else {
+                handleFilterChange('region', region);
+              }
+            }}
+          >
+            {region}
+          </button>
+        ))}
+      </div>
+    </div>
     
     {/* Country Filters */}
     <div className="filter-group">
       <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Country</h3>
       <div className="flex flex-wrap gap-2">
-        {countries.map(country => (
-          <button
-            key={country}
-            className={`text-sm py-1 px-2 rounded-full transition-colors ${
-              filters.country === country 
-                ? `bg-gray-800 text-white` 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-            onClick={() => handleFilterChange('country', country)}
-          >
-            {country}
-          </button>
-        ))}
+        <button
+          key="All-country"
+          className={`text-sm py-1 px-2 rounded-full transition-colors ${
+            filters.country === 'All' 
+              ? `bg-gray-800 text-white` 
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+          onClick={() => handleFilterChange('country', 'All')}
+        >
+          All
+        </button>
+        
+        {countries
+          .filter(country => country !== 'All')
+          .filter(country => {
+            if (filters.region === 'All') return true;
+            return designers.some(d => d.country === country && d.region === filters.region);
+          })
+          .map(country => (
+            <button
+              key={country}
+              className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                filters.country === country 
+                  ? `bg-gray-800 text-white` 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+              onClick={() => handleFilterChange('country', country)}
+            >
+              {country}
+            </button>
+          ))
+        }
       </div>
     </div>
     
@@ -253,23 +255,13 @@ const DesignerGallery = () => {
     )}
   </div>
 </div>
-      
-      <div className="stats mb-6">
-        <p className="text-gray-700 mb-2">
-          Showing {filteredDesigners.length} of {designers.length} designers
-        </p>
-        
-        {/* Region legend */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {Object.entries(regionColors).map(([region, color]) => (
-            stats.region && stats.region[region] ? 
-            <div key={region} className="flex items-center">
-              <div className={`w-3 h-3 ${color} rounded-full mr-1`}></div>
-              <span className="text-xs">{region} ({stats.region[region] || 0})</span>
-            </div> : null
-          ))}
-        </div>
-      </div>
+
+{/* Stats section without region legend */}
+<div className="stats mb-6">
+  <p className="text-gray-700 mb-2">
+    Showing {filteredDesigners.length} of {designers.length} designers
+  </p>
+</div>
       
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
         {filteredDesigners.map(designer => (
