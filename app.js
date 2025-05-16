@@ -263,28 +263,43 @@ const DesignerGallery = () => {
   </p>
 </div>
       
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-        {filteredDesigners.map(designer => (
-          <div key={designer.id} className="designer-card relative">
-            {/* Region color indicator */}
-            <div 
-              className={`absolute top-0 right-0 w-3 h-3 rounded-full ${regionColors[designer.region] || 'bg-gray-500'}`} 
-              title={designer.region}
-            ></div>
-            
-            <img 
-              src={designer.imageUrl} 
-              alt={designer.name}
-              className="w-full h-auto bg-gray-200"
-            />
-            <div className="mt-1 text-sm">
-              <p className="font-semibold truncate">{designer.name}</p>
-              <p className="text-xs text-gray-600">{designer.country}</p>
-              <p className="text-xs text-gray-500">{designer.region}</p>
-            </div>
-          </div>
-        ))}
+      
+  // Modified grid section with faded filter effect
+<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+  {designers.map(designer => {
+    // Check if this designer matches all the current filters
+    const matchesFilters = 
+      (filters.country === 'All' || designer.country === filters.country) &&
+      (filters.region === 'All' || designer.region === filters.region) &&
+      (filters.gender === 'All' || designer.gender === filters.gender);
+    
+    return (
+      <div 
+        key={designer.id} 
+        className={`designer-card relative transition-opacity duration-300 ${
+          matchesFilters ? 'opacity-100' : 'opacity-20'
+        }`}
+      >
+        {/* Region color indicator */}
+        <div 
+          className={`absolute top-0 right-0 w-3 h-3 rounded-full ${regionColors[designer.region] || 'bg-gray-500'}`} 
+          title={designer.region}
+        ></div>
+        
+        <img 
+          src={designer.imageUrl} 
+          alt={designer.name}
+          className="w-full h-auto bg-gray-200"
+        />
+        <div className="mt-1 text-sm">
+          <p className="font-semibold truncate">{designer.name}</p>
+          <p className="text-xs text-gray-600">{designer.country}</p>
+          <p className="text-xs text-gray-500">{designer.region}</p>
+        </div>
       </div>
+    );
+  })}
+</div>
       
       {filteredDesigners.length === 0 && (
         <div className="text-center py-8 text-gray-500">
