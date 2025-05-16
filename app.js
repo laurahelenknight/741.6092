@@ -261,13 +261,6 @@ const resetFilters = () => {
         ))}
       </div>
     </div>
-{/* Gender Filters */}
-<div className="filter-group">
-  <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Gender</h3>
-  <div className="flex flex-wrap gap-2">
-    {/* Gender buttons */}
-  </div>
-</div>
 
 {/* ADD THIS BLOCK: Occurrences Filter */}
 <div className="filter-group">
