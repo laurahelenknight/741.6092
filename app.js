@@ -260,6 +260,56 @@ const resetFilters = () => {
         ))}
       </div>
     </div>
+{/* Gender Filters */}
+<div className="filter-group">
+  <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Gender</h3>
+  <div className="flex flex-wrap gap-2">
+    {/* Gender buttons */}
+  </div>
+</div>
+
+{/* ADD THIS BLOCK: Occurrences Filter */}
+<div className="filter-group">
+  <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Appearances</h3>
+  <div className="flex flex-wrap gap-2">
+    <button
+      key="All-occurrences"
+      className={`text-sm py-1 px-2 rounded-full transition-colors ${
+        occurrenceFilter === 'All' 
+          ? `bg-gray-800 text-white` 
+          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+      }`}
+      onClick={() => setOccurrenceFilter('All')}
+    >
+      All
+    </button>
+    
+    {/* Filter by occurrence count */}
+    {['2', '3', '4', '5+'].map(count => (
+      <button
+        key={`occurrences-${count}`}
+        className={`text-sm py-1 px-2 rounded-full transition-colors ${
+          occurrenceFilter === count 
+            ? `bg-gray-800 text-white` 
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        }`}
+        onClick={() => setOccurrenceFilter(count)}
+      >
+        {count === '5+' ? '5+ times' : `${count} or more`}
+      </button>
+    ))}
+  </div>
+</div>
+
+{/* Reset Button */}
+{(filters.region !== 'All' || filters.country !== 'All' || filters.gender !== 'All' || occurrenceFilter !== 'All') && (
+  <button 
+    onClick={resetFilters}
+    className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+  >
+    Clear all filters
+  </button>
+)}
     
     {/* Reset Button */}
     {(filters.region !== 'All' || filters.country !== 'All' || filters.gender !== 'All') && (
