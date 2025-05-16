@@ -235,7 +235,7 @@ const DesignerGallery = () => {
             <div className="mt-1 text-sm">
               <p className="font-semibold truncate">{designer.name}</p>
               <p className="text-xs text-gray-600">{designer.country}</p>
-              <p className="text-xs text-gray-500">{designer.gender}</p>
+              <p className="text-xs text-gray-500">{designer.region}</p>
             </div>
           </div>
         ))}
