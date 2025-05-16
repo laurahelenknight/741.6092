@@ -1,1 +1,53 @@
+/* styles.css with region enhancements */
+.designer-card {
+  transition: transform 0.2s;
+  position: relative;
+}
 
+.designer-card:hover {
+  transform: scale(1.03);
+  z-index: 10;
+}
+
+/* Region indicator dot animation */
+.designer-card .region-indicator {
+  opacity: 0.8;
+  transition: all 0.3s;
+}
+
+.designer-card:hover .region-indicator {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Filter styles */
+.filter-group select {
+  transition: border-color 0.2s;
+}
+
+.filter-group select:focus {
+  border-color: #4299e1;
+  outline: none;
+}
+
+/* Region legend */
+.region-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.region-legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #4a5568;
+}
+
+.region-legend-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
