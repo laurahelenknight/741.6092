@@ -35,17 +35,26 @@ const DesignerGallery = () => {
           skipEmptyLines: true,
           complete: (results) => {
             console.log('Parsed data:', results);
-            
+
             if (results.data && results.data.length > 0) {
-              // Process designer data
-              const designerData = results.data.map((designer, index) => ({
-                id: index,
-                name: designer.name || 'Unknown',
-                country: designer.country || 'Unknown',
-                region: designer.region || 'Unknown',
-                gender: designer.gender || 'Unknown',
-                imageUrl: designer.image_url || `https://via.placeholder.com/150x200?text=${designer.name}`
-              }));
+            // Count occurrences of each designer
+            const designerOccurrences = {};
+            results.data.forEach(designer => {
+              const name = designer.name || 'Unknown';
+              designerOccurrences[name] = (designerOccurrences[name] || 0) + 1;
+            });
+            
+            // Process designer data
+            const designerData = results.data.map((designer, index) => ({
+              id: index,
+              name: designer.name || 'Unknown',
+              country: designer.country || 'Unknown',
+              region: designer.region || 'Unknown',
+              gender: designer.gender || 'Unknown',
+              imageUrl: designer.image_url || `https://via.placeholder.com/150x200?text=${designer.name}`,
+              occurrences: designerOccurrences[designer.name || 'Unknown']
+            }));
+          
               
               setDesigners(designerData);
               setFilteredDesigners(designerData);
