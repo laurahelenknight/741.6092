@@ -263,8 +263,7 @@ const DesignerGallery = () => {
   </p>
 </div>
       
-      
-  // Modified grid section with faded filter effect
+    
 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
   {designers.map(designer => {
     // Check if this designer matches all the current filters
