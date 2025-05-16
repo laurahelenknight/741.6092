@@ -109,24 +109,30 @@ const DesignerGallery = () => {
   };
 
   // Apply filters when they change
-  React.useEffect(() => {
-    let results = [...designers];
-    
-    if (filters.country !== 'All') {
-      results = results.filter(designer => designer.country === filters.country);
-    }
-    
-    if (filters.region !== 'All') {
-      results = results.filter(designer => designer.region === filters.region);
-    }
-    
-    if (filters.gender !== 'All') {
-      results = results.filter(designer => designer.gender === filters.gender);
-    }
-    
-    setFilteredDesigners(results);
-    calculateStats(results); // Update stats based on filtered data
-  }, [filters, designers]);
+React.useEffect(() => {
+  let results = [...designers];
+  
+  if (filters.country !== 'All') {
+    results = results.filter(designer => designer.country === filters.country);
+  }
+  
+  if (filters.region !== 'All') {
+    results = results.filter(designer => designer.region === filters.region);
+  }
+  
+  if (filters.gender !== 'All') {
+    results = results.filter(designer => designer.gender === filters.gender);
+  }
+  
+  // Add occurrence filtering
+  if (occurrenceFilter !== 'All') {
+    const minOccurrences = occurrenceFilter === '5+' ? 5 : parseInt(occurrenceFilter);
+    results = results.filter(designer => designer.occurrences >= minOccurrences);
+  }
+  
+  setFilteredDesigners(results);
+  calculateStats(results); // Update stats based on filtered data
+}, [filters, designers, occurrenceFilter]); // Add occurrenceFilter to dependency array
 
   // Handle filter changes
   const handleFilterChange = (filterType, value) => {
