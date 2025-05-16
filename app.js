@@ -149,7 +149,7 @@ const DesignerGallery = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Design Canon Representation Project</h1>
+      <h1 className="text-2xl font-bold mb-6">741.6092: Graphic Designers</h1>
       
       <div className="mb-6 flex flex-wrap gap-4">
         <div className="filter-group">
