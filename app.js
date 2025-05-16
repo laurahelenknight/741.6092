@@ -258,22 +258,38 @@ const DesignerGallery = () => {
 </div>
 {/* Filter section - end of replacement */}
       
-      <div className="stats mb-6">
-        <p className="text-gray-700 mb-2">
-          Showing {filteredDesigners.length} of {designers.length} designers
-        </p>
-        
-        {/* Region legend */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {Object.entries(regionColors).map(([region, color]) => (
-            stats.region && stats.region[region] ? 
-            <div key={region} className="flex items-center">
-              <div className={`w-3 h-3 ${color} rounded-full mr-1`}></div>
-              <span className="text-xs">{region} ({stats.region[region] || 0})</span>
-            </div> : null
-          ))}
-        </div>
+      {/* Gender Filters */}
+    <div className="filter-group">
+      <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Gender</h3>
+      <div className="flex flex-wrap gap-2">
+        {genders.map(gender => (
+          <button
+            key={gender}
+            className={`text-sm py-1 px-2 rounded-full transition-colors ${
+              filters.gender === gender 
+                ? `bg-gray-800 text-white` 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            onClick={() => handleFilterChange('gender', gender)}
+          >
+            {gender}
+          </button>
+        ))}
       </div>
+    </div>
+    
+    {/* Reset Button */}
+    {(filters.region !== 'All' || filters.country !== 'All' || filters.gender !== 'All') && (
+      <button 
+        onClick={resetFilters}
+        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+      >
+        Clear all filters
+      </button>
+    )}
+  </div>
+</div>
+{/* Filter section - end of replacement */}
       
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
         {filteredDesigners.map(designer => (
