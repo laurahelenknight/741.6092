@@ -1,0 +1,8 @@
+/* Add any custom styles here */
+.designer-card {
+  transition: transform 0.2s;
+}
+
+.designer-card:hover {
+  transform: scale(1.03);
+}
