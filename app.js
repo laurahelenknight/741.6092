@@ -1,10 +1,13 @@
+/ Updated app.js with region filter
 const DesignerGallery = () => {
   const [designers, setDesigners] = React.useState([]);
   const [filteredDesigners, setFilteredDesigners] = React.useState([]);
   const [countries, setCountries] = React.useState([]);
+  const [regions, setRegions] = React.useState([]);
   const [genders, setGenders] = React.useState([]);
   const [filters, setFilters] = React.useState({
     country: 'All',
+    region: 'All',
     gender: 'All'
   });
   const [loading, setLoading] = React.useState(true);
@@ -27,6 +30,7 @@ const DesignerGallery = () => {
                 id: index,
                 name: designer.name || 'Unknown',
                 country: designer.country || 'Unknown',
+                region: designer.region || 'Unknown',
                 gender: designer.gender || 'Unknown',
                 imageUrl: designer.image_url || `https://via.placeholder.com/150x200?text=${designer.name}`
               }));
@@ -34,11 +38,13 @@ const DesignerGallery = () => {
               setDesigners(designerData);
               setFilteredDesigners(designerData);
               
-              // Extract unique countries and genders for filters
+              // Extract unique countries, regions, and genders for filters
               const uniqueCountries = ['All', ...new Set(designerData.map(d => d.country).filter(Boolean))];
+              const uniqueRegions = ['All', ...new Set(designerData.map(d => d.region).filter(Boolean))];
               const uniqueGenders = ['All', ...new Set(designerData.map(d => d.gender).filter(Boolean))];
               
               setCountries(uniqueCountries);
+              setRegions(uniqueRegions);
               setGenders(uniqueGenders);
             }
             setLoading(false);
@@ -63,6 +69,10 @@ const DesignerGallery = () => {
     
     if (filters.country !== 'All') {
       results = results.filter(designer => designer.country === filters.country);
+    }
+    
+    if (filters.region !== 'All') {
+      results = results.filter(designer => designer.region === filters.region);
     }
     
     if (filters.gender !== 'All') {
@@ -97,6 +107,19 @@ const DesignerGallery = () => {
       <h1 className="text-2xl font-bold mb-6">Design Canon Representation Project</h1>
       
       <div className="mb-6 flex flex-wrap gap-4">
+        <div className="filter-group">
+          <label className="block mb-2 font-semibold">Region:</label>
+          <select 
+            className="border rounded px-3 py-2 min-w-40"
+            value={filters.region}
+            onChange={(e) => handleFilterChange('region', e.target.value)}
+          >
+            {regions.map(region => (
+              <option key={region} value={region}>{region}</option>
+            ))}
+          </select>
+        </div>
+        
         <div className="filter-group">
           <label className="block mb-2 font-semibold">Country:</label>
           <select 
