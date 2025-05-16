@@ -143,13 +143,14 @@ React.useEffect(() => {
   };
 
   // Reset all filters
-  const resetFilters = () => {
-    setFilters({
-      country: 'All',
-      region: 'All',
-      gender: 'All'
-    });
-  };
+const resetFilters = () => {
+  setFilters({
+    country: 'All',
+    region: 'All',
+    gender: 'All'
+  });
+  setOccurrenceFilter('All'); // Add this line
+};
 
   if (loading) {
     return <div className="flex justify-center items-center h-64">Loading...</div>;
