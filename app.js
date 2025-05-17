@@ -4,6 +4,7 @@ const DesignerGallery = () => {
   const [countries, setCountries] = React.useState([]);
   const [regions, setRegions] = React.useState([]);
   const [genders, setGenders] = React.useState([]);
+  const [colleges, setColleges] = React.useState([]); // New state for colleges
   const [filters, setFilters] = React.useState({
     country: 'All',
     region: 'All',
@@ -13,6 +14,7 @@ const DesignerGallery = () => {
   const [error, setError] = React.useState(null);
   const [stats, setStats] = React.useState({});
   const [occurrenceFilter, setOccurrenceFilter] = React.useState('All');
+  const [collegeFilter, setCollegeFilter] = React.useState('All'); // New state for college filter
 
   // Region color mapping
   const regionColors = {
@@ -38,36 +40,39 @@ const DesignerGallery = () => {
             console.log('Parsed data:', results);
 
             if (results.data && results.data.length > 0) {
-            // Count occurrences of each designer
-            const designerOccurrences = {};
-            results.data.forEach(designer => {
-              const name = designer.name || 'Unknown';
-              designerOccurrences[name] = (designerOccurrences[name] || 0) + 1;
-            });
-            
-            // Process designer data
-            const designerData = results.data.map((designer, index) => ({
-              id: index,
-              name: designer.name || 'Unknown',
-              country: designer.country || 'Unknown',
-              region: designer.region || 'Unknown',
-              gender: designer.gender || 'Unknown',
-              imageUrl: designer.image_url || `https://via.placeholder.com/150x200?text=${designer.name}`,
-              occurrences: designerOccurrences[designer.name || 'Unknown']
-            }));
-          
+              // Count occurrences of each designer
+              const designerOccurrences = {};
+              results.data.forEach(designer => {
+                const name = designer.name || 'Unknown';
+                designerOccurrences[name] = (designerOccurrences[name] || 0) + 1;
+              });
               
+              // Process designer data
+              const designerData = results.data.map((designer, index) => ({
+                id: index,
+                name: designer.name || 'Unknown',
+                country: designer.country || 'Unknown',
+                region: designer.region || 'Unknown',
+                gender: designer.gender || 'Unknown',
+                college: designer.college || 'Unknown', // Add college property
+                imageUrl: designer.image_url || `https://via.placeholder.com/150x200?text=${designer.name}`,
+                occurrences: designerOccurrences[designer.name || 'Unknown']
+              }));
+            
+                
               setDesigners(designerData);
               setFilteredDesigners(designerData);
               
-              // Extract unique countries, regions, and genders for filters
+              // Extract unique countries, regions, genders, and colleges for filters
               const uniqueCountries = ['All', ...new Set(designerData.map(d => d.country).filter(Boolean))];
               const uniqueRegions = ['All', ...new Set(designerData.map(d => d.region).filter(Boolean))];
               const uniqueGenders = ['All', ...new Set(designerData.map(d => d.gender).filter(Boolean))];
+              const uniqueColleges = ['All', ...new Set(designerData.map(d => d.college).filter(Boolean))]; // Extract colleges
               
               setCountries(uniqueCountries);
               setRegions(uniqueRegions);
               setGenders(uniqueGenders);
+              setColleges(uniqueColleges); // Set colleges
               
               // Calculate initial statistics
               calculateStats(designerData);
@@ -109,31 +114,36 @@ const DesignerGallery = () => {
   };
 
   // Apply filters when they change
-React.useEffect(() => {
-  let results = [...designers];
-  
-  if (filters.country !== 'All') {
-    results = results.filter(designer => designer.country === filters.country);
-  }
-  
-  if (filters.region !== 'All') {
-    results = results.filter(designer => designer.region === filters.region);
-  }
-  
-  if (filters.gender !== 'All') {
-    results = results.filter(designer => designer.gender === filters.gender);
-  }
-  
-  // Add occurrence filtering
-  if (occurrenceFilter !== 'All') {
-    // Handle "5+" special case
-    const minOccurrences = occurrenceFilter === '5+' ? 5 : parseInt(occurrenceFilter);
-    results = results.filter(designer => designer.occurrences >= minOccurrences);
-  }
-  
-  setFilteredDesigners(results);
-  calculateStats(results); // Update stats based on filtered data
-}, [filters, designers, occurrenceFilter]);
+  React.useEffect(() => {
+    let results = [...designers];
+    
+    if (filters.country !== 'All') {
+      results = results.filter(designer => designer.country === filters.country);
+    }
+    
+    if (filters.region !== 'All') {
+      results = results.filter(designer => designer.region === filters.region);
+    }
+    
+    if (filters.gender !== 'All') {
+      results = results.filter(designer => designer.gender === filters.gender);
+    }
+    
+    // Add occurrence filtering
+    if (occurrenceFilter !== 'All') {
+      // Handle "5+" special case
+      const minOccurrences = occurrenceFilter === '5+' ? 5 : parseInt(occurrenceFilter);
+      results = results.filter(designer => designer.occurrences >= minOccurrences);
+    }
+    
+    // Add college filtering
+    if (collegeFilter !== 'All') {
+      results = results.filter(designer => designer.college === collegeFilter);
+    }
+    
+    setFilteredDesigners(results);
+    calculateStats(results); // Update stats based on filtered data
+  }, [filters, designers, occurrenceFilter, collegeFilter]); // Add collegeFilter to dependencies
 
   // Handle filter changes
   const handleFilterChange = (filterType, value) => {
@@ -144,14 +154,15 @@ React.useEffect(() => {
   };
 
   // Reset all filters
-const resetFilters = () => {
-  setFilters({
-    country: 'All',
-    region: 'All',
-    gender: 'All'
-  });
-  setOccurrenceFilter('All'); // Add this line
-};
+  const resetFilters = () => {
+    setFilters({
+      country: 'All',
+      region: 'All',
+      gender: 'All'
+    });
+    setOccurrenceFilter('All');
+    setCollegeFilter('All'); // Reset college filter
+  };
 
   if (loading) {
     return <div className="flex justify-center items-center h-64">Loading...</div>;
@@ -169,201 +180,236 @@ const resetFilters = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold mb-6">741.6092: Graphic Designers</h1>
       
-     <div className="mb-8">
-  {/* Filter Groups */}
-  <div className="filter-sections space-y-6">
-    {/* Region Filters */}
-    <div className="filter-group">
-      <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Region</h3>
-      <div className="flex flex-wrap gap-2">
-        {regions.map(region => (
-          <button
-            key={region}
-            className={`text-sm py-1 px-2 rounded-full transition-colors ${
-              filters.region === region 
-                ? `bg-gray-800 text-white` 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-            onClick={() => {
-              // Reset country filter when region changes
-              if (region !== filters.region) {
-                setFilters(prevFilters => ({
-                  ...prevFilters,
-                  region: region,
-                  country: 'All'
-                }));
-              } else {
-                handleFilterChange('region', region);
+      <div className="mb-8">
+        {/* Filter Groups */}
+        <div className="filter-sections space-y-6">
+          {/* Region Filters */}
+          <div className="filter-group">
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Region</h3>
+            <div className="flex flex-wrap gap-2">
+              {regions.map(region => (
+                <button
+                  key={region}
+                  className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                    filters.region === region 
+                      ? `bg-gray-800 text-white` 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                  onClick={() => {
+                    // Reset country filter when region changes
+                    if (region !== filters.region) {
+                      setFilters(prevFilters => ({
+                        ...prevFilters,
+                        region: region,
+                        country: 'All'
+                      }));
+                    } else {
+                      handleFilterChange('region', region);
+                    }
+                  }}
+                >
+                  {region}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Country Filters */}
+          <div className="filter-group">
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Country</h3>
+            <div className="flex flex-wrap gap-2">
+              <button
+                key="All-country"
+                className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                  filters.country === 'All' 
+                    ? `bg-gray-800 text-white` 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                onClick={() => handleFilterChange('country', 'All')}
+              >
+                All
+              </button>
+              
+              {countries
+                .filter(country => country !== 'All')
+                .filter(country => {
+                  if (filters.region === 'All') return true;
+                  return designers.some(d => d.country === country && d.region === filters.region);
+                })
+                .map(country => (
+                  <button
+                    key={country}
+                    className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                      filters.country === country 
+                        ? `bg-gray-800 text-white` 
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                    onClick={() => handleFilterChange('country', country)}
+                  >
+                    {country}
+                  </button>
+                ))
               }
-            }}
-          >
-            {region}
-          </button>
-        ))}
-      </div>
-    </div>
-    
-    {/* Country Filters */}
-    <div className="filter-group">
-      <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Country</h3>
-      <div className="flex flex-wrap gap-2">
-        <button
-          key="All-country"
-          className={`text-sm py-1 px-2 rounded-full transition-colors ${
-            filters.country === 'All' 
-              ? `bg-gray-800 text-white` 
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-          onClick={() => handleFilterChange('country', 'All')}
-        >
-          All
-        </button>
-        
-        {countries
-          .filter(country => country !== 'All')
-          .filter(country => {
-            if (filters.region === 'All') return true;
-            return designers.some(d => d.country === country && d.region === filters.region);
-          })
-          .map(country => (
-            <button
-              key={country}
-              className={`text-sm py-1 px-2 rounded-full transition-colors ${
-                filters.country === country 
-                  ? `bg-gray-800 text-white` 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              onClick={() => handleFilterChange('country', country)}
+            </div>
+          </div>
+          
+          {/* Gender Filters */}
+          <div className="filter-group">
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Gender</h3>
+            <div className="flex flex-wrap gap-2">
+              {genders.map(gender => (
+                <button
+                  key={gender}
+                  className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                    filters.gender === gender 
+                      ? `bg-gray-800 text-white` 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                  onClick={() => handleFilterChange('gender', gender)}
+                >
+                  {gender}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Occurrences Filter */}
+          <div className="filter-group">
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Appearances</h3>
+            <div className="flex flex-wrap gap-2">
+              <button
+                key="All-occurrences"
+                className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                  occurrenceFilter === 'All' 
+                    ? `bg-gray-800 text-white` 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                onClick={() => setOccurrenceFilter('All')}
+              >
+                All
+              </button>
+              
+              {/* Filter by occurrence count */}
+              {['2', '3', '4', '5+'].map(count => (
+                <button
+                  key={`occurrences-${count}`}
+                  className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                    occurrenceFilter === count 
+                      ? `bg-gray-800 text-white` 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                  onClick={() => setOccurrenceFilter(count)}
+                >
+                  {count === '5+' ? '5+ times' : `${count} or more`}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* College Filters - NEW SECTION */}
+          <div className="filter-group">
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">College</h3>
+            <div className="flex flex-wrap gap-2">
+              <button
+                key="All-colleges"
+                className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                  collegeFilter === 'All' 
+                    ? `bg-gray-800 text-white` 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                onClick={() => setCollegeFilter('All')}
+              >
+                All
+              </button>
+              
+              {colleges
+                .filter(college => college !== 'All')
+                .map(college => (
+                  <button
+                    key={college}
+                    className={`text-sm py-1 px-2 rounded-full transition-colors ${
+                      collegeFilter === college 
+                        ? `bg-gray-800 text-white` 
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                    onClick={() => setCollegeFilter(college)}
+                  >
+                    {college}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+
+          {/* Reset Button - Fixed duplicate button issue */}
+          {(filters.region !== 'All' || filters.country !== 'All' || filters.gender !== 'All' || occurrenceFilter !== 'All' || collegeFilter !== 'All') && (
+            <button 
+              onClick={resetFilters}
+              className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
             >
-              {country}
+              Clear all filters
             </button>
-          ))
-        }
-      </div>
-    </div>
-    
-    {/* Gender Filters */}
-    <div className="filter-group">
-      <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Gender</h3>
-      <div className="flex flex-wrap gap-2">
-        {genders.map(gender => (
-          <button
-            key={gender}
-            className={`text-sm py-1 px-2 rounded-full transition-colors ${
-              filters.gender === gender 
-                ? `bg-gray-800 text-white` 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-            onClick={() => handleFilterChange('gender', gender)}
-          >
-            {gender}
-          </button>
-        ))}
-      </div>
-    </div>
-
-{/* ADD THIS BLOCK: Occurrences Filter */}
-<div className="filter-group">
-  <h3 className="text-sm font-semibold uppercase tracking-wider mb-2">Appearances</h3>
-  <div className="flex flex-wrap gap-2">
-    <button
-      key="All-occurrences"
-      className={`text-sm py-1 px-2 rounded-full transition-colors ${
-        occurrenceFilter === 'All' 
-          ? `bg-gray-800 text-white` 
-          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-      }`}
-      onClick={() => setOccurrenceFilter('All')}
-    >
-      All
-    </button>
-    
-    {/* Filter by occurrence count */}
-    {['2', '3', '4', '5+'].map(count => (
-      <button
-        key={`occurrences-${count}`}
-        className={`text-sm py-1 px-2 rounded-full transition-colors ${
-          occurrenceFilter === count 
-            ? `bg-gray-800 text-white` 
-            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-        }`}
-        onClick={() => setOccurrenceFilter(count)}
-      >
-        {count === '5+' ? '5+ times' : `${count} or more`}
-      </button>
-    ))}
-  </div>
-</div>
-
-{/* Reset Button */}
-{(filters.region !== 'All' || filters.country !== 'All' || filters.gender !== 'All' || occurrenceFilter !== 'All') && (
-  <button 
-    onClick={resetFilters}
-    className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-  >
-    Clear all filters
-  </button>
-)}
-    
-    {/* Reset Button */}
-    {(filters.region !== 'All' || filters.country !== 'All' || filters.gender !== 'All') && (
-      <button 
-        onClick={resetFilters}
-        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-      >
-        Clear all filters
-      </button>
-    )}
-  </div>
-</div>
-
-{/* Stats section without region legend */}
-<div className="stats mb-6">
-  <p className="text-gray-700 mb-2">
-    Highlighting {filteredDesigners.length} of {designers.length} designers
-  </p>
-</div>
-      
-    
-<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-  {designers.map(designer => {
-  // Check if this designer matches all the current filters
-  const matchesFilters = 
-    (filters.country === 'All' || designer.country === filters.country) &&
-    (filters.region === 'All' || designer.region === filters.region) &&
-    (filters.gender === 'All' || designer.gender === filters.gender) &&
-    (occurrenceFilter === 'All' || 
-     (occurrenceFilter === '5+' ? designer.occurrences >= 5 : 
-      designer.occurrences >= parseInt(occurrenceFilter)))
-    
-    return (
-      <div 
-        key={designer.id} 
-        className={`designer-card relative transition-opacity duration-300 ${
-          matchesFilters ? 'opacity-100' : 'opacity-20'
-        }`}
-      >
-        {/* Region color indicator */}
-        <div 
-          className={`absolute top-0 right-0 w-3 h-3 rounded-full ${regionColors[designer.region] || 'bg-gray-500'}`} 
-          title={designer.region}
-        ></div>
-        
-        <img 
-          src={designer.imageUrl} 
-          alt={designer.name}
-          className="w-full h-auto bg-gray-200"
-        />
-        <div className="mt-1 text-sm">
-          <p className="font-semibold truncate">{designer.name}</p>
-          <p className="text-xs text-gray-600">{designer.country}</p>
-          <p className="text-xs text-gray-500">{designer.region}</p>
+          )}
         </div>
       </div>
-    );
-  })}
-</div>
-      
+
+      {/* Stats section without region legend */}
+      <div className="stats mb-6">
+        <p className="text-gray-700 mb-2">
+          Highlighting {filteredDesigners.length} of {designers.length} designers
+        </p>
+      </div>
+          
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+        {designers.map(designer => {
+          // Check if this designer matches all the current filters
+          const matchesFilters = 
+            (filters.country === 'All' || designer.country === filters.country) &&
+            (filters.region === 'All' || designer.region === filters.region) &&
+            (filters.gender === 'All' || designer.gender === filters.gender) &&
+            (occurrenceFilter === 'All' || 
+              (occurrenceFilter === '5+' ? designer.occurrences >= 5 : 
+              designer.occurrences >= parseInt(occurrenceFilter))) &&
+            (collegeFilter === 'All' || designer.college === collegeFilter); // Add college filter check
+          
+          return (
+            <div 
+              key={designer.id} 
+              className={`designer-card relative transition-opacity duration-300 ${
+                matchesFilters ? 'opacity-100' : 'opacity-20'
+              }`}
+            >
+              {/* Region color indicator */}
+              <div 
+                className={`absolute top-0 right-0 w-3 h-3 rounded-full ${regionColors[designer.region] || 'bg-gray-500'}`} 
+                title={designer.region}
+              ></div>
+              
+              {/* Occurrence count badge (only show if > 1) */}
+              {designer.occurrences > 1 && (
+                <div 
+                  className="absolute top-0 left-0 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                  title={`Appears ${designer.occurrences} times`}
+                >
+                  {designer.occurrences}
+                </div>
+              )}
+              
+              <img 
+                src={designer.imageUrl} 
+                alt={designer.name}
+                className="w-full h-auto bg-gray-200"
+              />
+              <div className="mt-1 text-sm">
+                <p className="font-semibold truncate">{designer.name}</p>
+                <p className="text-xs text-gray-600">{designer.country}</p>
+                <p className="text-xs text-gray-500">{designer.region}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+        
       {filteredDesigners.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           No designers match your current filters.
