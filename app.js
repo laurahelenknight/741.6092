@@ -304,17 +304,6 @@ const resetFilters = () => {
     Clear all filters
   </button>
 )}
-    
-    {/* Reset Button */}
-    {(filters.region !== 'All' || filters.country !== 'All' || filters.gender !== 'All') && (
-      <button 
-        onClick={resetFilters}
-        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-      >
-        Clear all filters
-      </button>
-    )}
-  </div>
 </div>
 
 {/* Stats section without region legend */}
