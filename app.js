@@ -375,7 +375,7 @@ const DesignerGallery = () => {
   )}
 </div>
           
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 3xl:grid-cols-16 gap-2 w-full">
         {designers.map(designer => {
           // Check if this designer matches all the current filters
           const matchesFilters = 
