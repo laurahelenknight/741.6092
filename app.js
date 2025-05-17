@@ -353,13 +353,20 @@ const DesignerGallery = () => {
         </div>
       </div>
 
-      {/* Stats section with improved occurrence filter description */}
+      {/* Stats section with correct counting for occurrence filter */}
 <div className="stats mb-6">
   {occurrenceFilter !== 'All' ? (
-    // When occurrence filter is active
-    <p className="text-gray-700 mb-2">
-      Highlighting {filteredDesigners.length} designers who each appear {occurrenceFilter === '5+' ? '5+' : occurrenceFilter} or more times
-    </p>
+    // When occurrence filter is active, count unique designers
+    (() => {
+      // Get unique designer names from filtered results
+      const uniqueDesignerNames = [...new Set(filteredDesigners.map(d => d.name))];
+      
+      return (
+        <p className="text-gray-700 mb-2">
+          Highlighting {uniqueDesignerNames.length} designers who each appear {occurrenceFilter === '5+' ? '5+' : occurrenceFilter} or more times
+        </p>
+      );
+    })()
   ) : (
     // For other filters
     <p className="text-gray-700 mb-2">
