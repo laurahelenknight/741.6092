@@ -353,12 +353,20 @@ const DesignerGallery = () => {
         </div>
       </div>
 
-      {/* Stats section without region legend */}
-      <div className="stats mb-6">
-        <p className="text-gray-700 mb-2">
-          Highlighting {filteredDesigners.length} of {designers.length} designers
-        </p>
-      </div>
+      {/* Stats section with improved occurrence filter description */}
+<div className="stats mb-6">
+  {occurrenceFilter !== 'All' ? (
+    // When occurrence filter is active
+    <p className="text-gray-700 mb-2">
+      Highlighting {filteredDesigners.length} designers who each appear {occurrenceFilter === '5+' ? '5+' : occurrenceFilter} or more times
+    </p>
+  ) : (
+    // For other filters
+    <p className="text-gray-700 mb-2">
+      Highlighting {filteredDesigners.length} of {designers.length} designers
+    </p>
+  )}
+</div>
           
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
         {designers.map(designer => {
