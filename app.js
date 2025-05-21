@@ -353,20 +353,25 @@ Clear all filters
 </div>
 </div>
 
-{/* Stats section with correct counting for occurrence filter */}
+      {/* Stats section with improved occurrence filter description */}
+      {/* Stats section with correct counting for occurrence filter */}
 <div className="stats mb-6">
 {occurrenceFilter !== 'All' ? (
-// When occurrence filter is active, count unique designers
-(() => {
-// Get unique designer names from filtered results
-const uniqueDesignerNames = [...new Set(filteredDesigners.map(d => d.name))];
-
-return (
-<p className="text-gray-700 mb-2">
-Highlighting {uniqueDesignerNames.length} designers who each appear {occurrenceFilter === '5+' ? '5+' : occurrenceFilter} or more times
-</p>
-);
-})()
+    // When occurrence filter is active
+    <p className="text-gray-700 mb-2">
+      Highlighting {filteredDesigners.length} designers who each appear {occurrenceFilter === '5+' ? '5+' : occurrenceFilter} or more times
+    </p>
+    // When occurrence filter is active, count unique designers
+    (() => {
+      // Get unique designer names from filtered results
+      const uniqueDesignerNames = [...new Set(filteredDesigners.map(d => d.name))];
+      
+      return (
+        <p className="text-gray-700 mb-2">
+          Highlighting {uniqueDesignerNames.length} designers who each appear {occurrenceFilter === '5+' ? '5+' : occurrenceFilter} or more times
+        </p>
+      );
+    })()
 ) : (
 // For other filters
 <p className="text-gray-700 mb-2">
@@ -375,8 +380,7 @@ Highlighting {filteredDesigners.length} of {designers.length} designers
 )}
 </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 3xl:grid-cols-16 gap-2 w-full">
+<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
 {designers.map(designer => {
 // Check if this designer matches all the current filters
 const matchesFilters = 
