@@ -375,24 +375,38 @@ const DesignerGallery = () => {
   )}
 </div>
           
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 3xl:grid-cols-16 gap-2 w-full">
-        {designers.map(designer => {
-          // Check if this designer matches all the current filters
-          const matchesFilters = 
-            (filters.country === 'All' || designer.country === filters.country) &&
-            (filters.region === 'All' || designer.region === filters.region) &&
-            (filters.gender === 'All' || designer.gender === filters.gender) &&
-            (occurrenceFilter === 'All' || 
-              (occurrenceFilter === '5+' ? designer.occurrences >= 5 : 
-              designer.occurrences >= parseInt(occurrenceFilter))) &&
-            (collegeFilter === 'All' || designer.college === collegeFilter); // Add college filter check
-          
-          return (
-            <div 
-              key={designer.id} 
-              className={`designer-card relative transition-opacity duration-300 ${
-                matchesFilters ? 'opacity-100' : 'opacity-20'
-              }`}
+     <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 3xl:grid-cols-16 gap-2 w-full">
+  {filteredDesigners.map(designer => (
+    <div key={designer.id} className="designer-card relative">
+      {/* Region color indicator */}
+      <div 
+        className={`absolute top-0 right-0 w-3 h-3 rounded-full ${regionColors[designer.region] || 'bg-gray-500'}`} 
+        title={designer.region}
+      ></div>
+      
+      {/* Occurrence count badge (only show if > 1) */}
+      {designer.occurrences > 1 && (
+        <div 
+          className="absolute top-0 left-0 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+          title={`Appears ${designer.occurrences} times`}
+        >
+          {designer.occurrences}
+        </div>
+      )}
+      
+      <img 
+        src={designer.imageUrl} 
+        alt={designer.name}
+        className="w-full h-auto bg-gray-200"
+      />
+      <div className="mt-1 text-sm">
+        <p className="font-semibold truncate">{designer.name}</p>
+        <p className="text-xs text-gray-600">{designer.country}</p>
+        <p className="text-xs text-gray-500">{designer.region}</p>
+      </div>
+    </div>
+  ))}
+</div>
             >
               {/* Region color indicator */}
               <div 
