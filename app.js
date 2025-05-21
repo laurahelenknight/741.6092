@@ -375,9 +375,12 @@ const DesignerGallery = () => {
   )}
 </div>
           
-     <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 3xl:grid-cols-16 gap-2 w-full">
+  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 3xl:grid-cols-16 gap-2 w-full">
   {filteredDesigners.map(designer => (
-    <div key={designer.id} className="designer-card relative">
+    <div 
+      key={designer.id} 
+      className="designer-card relative"
+    >
       {/* Region color indicator */}
       <div 
         className={`absolute top-0 right-0 w-3 h-3 rounded-full ${regionColors[designer.region] || 'bg-gray-500'}`} 
